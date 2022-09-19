@@ -7,21 +7,22 @@ using DG.Tweening;
 public class CarBehaviour : MonoBehaviour
 {
     [SerializeField] float _speed;
-    [SerializeField] CinemachineSmoothPath _currentPath;
+    [SerializeField] CinemachinePath _currentPath;
     private float _currentDistanceOnPath;
     private bool _isGoing = true;
-    private bool _pathChanged=true;
+    private bool _carDetected = false;
+    private bool _pathTaken = false;
+    
     
     void Update()
     {
            if (_currentPath != null)
            {
-                if (_pathChanged)
-                {
+                
                     transform.position= _currentPath.EvaluatePositionAtUnit(_currentDistanceOnPath,CinemachinePathBase.PositionUnits.Distance);
                     transform.rotation = _currentPath.EvaluateOrientationAtUnit(_currentDistanceOnPath, CinemachinePathBase.PositionUnits.Distance);
-                    _pathChanged = false;
-                }
+                    
+                
 
                 if (_isGoing)
                 {
@@ -33,6 +34,21 @@ public class CarBehaviour : MonoBehaviour
             
                 }
            }
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5f, Color.green);
+             RaycastHit hit;
+             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5f))
+             {
+                    if (hit.transform.CompareTag("car") && !_pathTaken)
+                    {
+                         _carDetected = true;
+                          _pathTaken = true;
+                            StartCoroutine(pathTakenFalseCO());
+                    }
+                   
+             }
+             
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,28 +58,31 @@ public class CarBehaviour : MonoBehaviour
         {
              
         _isGoing = false;
-            
+         
         }
 
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("path") && !_isGoing)
+
+        if (other.CompareTag("path") && _carDetected)
         {
             
-            _currentPath = other.GetComponent<CinemachineSmoothPath>();
-            
-
-            transform.DORotate(_currentPath.m_Waypoints[0].position,0.5f);
-            transform.DOMove(_currentPath.m_Waypoints[0].position,0.5f).OnComplete(()=> {
+                _currentPath = other.GetComponent<CinemachinePath>();
                 _currentDistanceOnPath = 0;
-                _pathChanged = true;
                 _isGoing = true;
-            });
-
-
-            
+                _carDetected = false;
+                
         }
     }
+
+
+
+    IEnumerator pathTakenFalseCO()
+    {
+        yield return new WaitForSeconds(1f);
+        _pathTaken = false;
+    }
+
 }
