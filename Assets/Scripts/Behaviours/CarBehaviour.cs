@@ -10,24 +10,28 @@ public class CarBehaviour : MonoBehaviour
     [SerializeField] CinemachineSmoothPath _currentPath;
     private float _currentDistanceOnPath;
     private bool _isGoing = true;
-
-
+    private bool _pathChanged=true;
+    
     void Update()
     {
            if (_currentPath != null)
            {
+                if (_pathChanged)
+                {
+                    transform.position= _currentPath.EvaluatePositionAtUnit(_currentDistanceOnPath,CinemachinePathBase.PositionUnits.Distance);
+                    transform.rotation = _currentPath.EvaluateOrientationAtUnit(_currentDistanceOnPath, CinemachinePathBase.PositionUnits.Distance);
+                    _pathChanged = false;
+                }
 
-            transform.position= _currentPath.EvaluatePositionAtUnit(_currentDistanceOnPath,CinemachinePathBase.PositionUnits.Distance);
-              transform.rotation = _currentPath.EvaluateOrientationAtUnit(_currentDistanceOnPath, CinemachinePathBase.PositionUnits.Distance);
-            if (_isGoing)
-            {
-            _currentDistanceOnPath += _speed * Time.deltaTime;
-            }
+                if (_isGoing)
+                {
+                    _currentDistanceOnPath += _speed * Time.deltaTime;
+                }
 
-            if (_currentDistanceOnPath > _currentPath.PathLength)
-            {
+                if (_currentDistanceOnPath > _currentPath.PathLength)
+                {
             
-            }
+                }
            }
     }
 
@@ -36,8 +40,9 @@ public class CarBehaviour : MonoBehaviour
 
         if (other.CompareTag("car"))
         {
-            Debug.Log(Time.time);   
+             
         _isGoing = false;
+            
         }
 
     }
@@ -48,10 +53,12 @@ public class CarBehaviour : MonoBehaviour
         {
             
             _currentPath = other.GetComponent<CinemachineSmoothPath>();
+            
 
             transform.DORotate(_currentPath.m_Waypoints[0].position,0.5f);
             transform.DOMove(_currentPath.m_Waypoints[0].position,0.5f).OnComplete(()=> {
                 _currentDistanceOnPath = 0;
+                _pathChanged = true;
                 _isGoing = true;
             });
 
