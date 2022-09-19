@@ -46,9 +46,9 @@ namespace Game.Scripts.Behaviours
 
                 }
             }
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5f, Color.green);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2.5f, Color.green);
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5f))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 2.5f))
             {
                 if (hit.transform.CompareTag("car") && !_pathTaken)
                 {
