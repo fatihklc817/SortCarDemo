@@ -10,10 +10,12 @@ namespace Game.Scripts.Behaviours
     public class barrierBehaviour : MonoBehaviour
     {
         public bool IsBarrierOn;
+        public bool IsBarrierInAction;
 
         [SerializeField] Transform _pivotPoint;
         [SerializeField] float _doorCloseTime;
         private BarrierManager _barrierManager;
+
 
         // Start is called before the first frame update
 
@@ -45,7 +47,7 @@ namespace Game.Scripts.Behaviours
                     if (transform.rotation.z < 0f)
                     {
                         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                        _barrierManager.IsBarrierInAction = false;
+                       IsBarrierInAction = false;
                         Debug.Log("as");
 
 
@@ -62,7 +64,7 @@ namespace Game.Scripts.Behaviours
 
         IEnumerator OpenBarierCO()
         {
-            _barrierManager.IsBarrierInAction = true;
+            IsBarrierInAction = true;
             IsBarrierOn = true;
             yield return new WaitForSeconds(_doorCloseTime);
             IsBarrierOn = false;

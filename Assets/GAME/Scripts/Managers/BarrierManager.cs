@@ -10,7 +10,7 @@ namespace Game.Scripts.Managers
     {
         [SerializeField] barrierBehaviour[] _barrierBehaviours;
 
-        public bool IsBarrierInAction;
+        
 
 
         public override void Initialize(GameManager gameManager)
@@ -25,7 +25,11 @@ namespace Game.Scripts.Managers
 
         public void OpenBarrier(int ButtonID)
         {
+            if (!_barrierBehaviours[ButtonID].IsBarrierInAction)
+            {
             _barrierBehaviours[ButtonID].OpenBarrier();
+
+            }
 
         }
 

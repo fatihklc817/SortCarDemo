@@ -26,7 +26,7 @@ namespace Game.Scripts.Managers
 
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
                 {
-                    if (hit.transform.CompareTag("Button") && !GameManager.BarrierManager.IsBarrierInAction)
+                    if (hit.transform.CompareTag("Button"))
                     {
                         Debug.Log("KapiAçilsin");
                         GameManager.BarrierManager.OpenBarrier(hit.transform.gameObject.GetComponent<ButtonBehaviouur>().ButtonID);
