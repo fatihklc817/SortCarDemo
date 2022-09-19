@@ -8,11 +8,19 @@ public class CarBehaviour : MonoBehaviour
 {
     [SerializeField] float _speed;
     [SerializeField] CinemachinePath _currentPath;
+
+    private CarManager _carManager;
+
     private float _currentDistanceOnPath;
     private bool _isGoing = true;
     private bool _carDetected = false;
     private bool _pathTaken = false;
     
+
+    public void Initialize(CarManager carManager)
+    {
+        _carManager = carManager;
+    }
     
     void Update()
     {
