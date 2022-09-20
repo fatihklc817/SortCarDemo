@@ -11,24 +11,57 @@ namespace Game.Scripts.Behaviours
     public class CarBehaviour : MonoBehaviour
     {
         [SerializeField] float _speed;
-        [SerializeField] CinemachinePath _currentPath;
+        
+        
 
+        private CinemachinePath _currentPath;
         private CarManager _carManager;
+
 
         private float _currentDistanceOnPath;
         private bool _isGoing = true;
         private bool _carDetected = false;
         private bool _pathTaken = false;
+        private bool _isQueueEnded = false;
+        private int _pathId;
+        private bool _isMyBarrierOpen;
+        
+        private barrierBehaviour _myBarrier;
 
 
-        public void Initialize(CarManager carManager)
+        
+        public void Initialize(CarManager carManager , int pathId)
         {
+            
             _carManager = carManager;
+            _carManager.GameManager.EventManager.OnBarrierOpened += MyBarrierOpened;
+            _pathId = pathId;
+            if (pathId == 0)
+            {
+                _currentPath = _carManager.GameManager.PathManager.LeftPath;
+                _myBarrier = carManager.GameManager.BarrierManager._barrierBehaviours[0];
+                
+                
+            }
+            else
+            {
+                _currentPath = _carManager.GameManager.PathManager.RightPath;
+                _myBarrier = carManager.GameManager.BarrierManager._barrierBehaviours[1];
+                
+            }
+            _isMyBarrierOpen = false;
+            if (_isGoing)
+            {
+
+                transform.DOMove(_currentPath.m_Waypoints[0].position + new Vector3(0f,0.35f,0f), 1).SetId(1).OnComplete(() => { _isQueueEnded = true; });
+            }
+
         }
 
         void Update()
         {
-            if (_currentPath != null)
+            
+            if (_currentPath != null && _isQueueEnded && _isMyBarrierOpen) 
             {
 
                 transform.position = _currentPath.EvaluatePositionAtUnit(_currentDistanceOnPath, CinemachinePathBase.PositionUnits.Distance);
@@ -46,9 +79,9 @@ namespace Game.Scripts.Behaviours
 
                 }
             }
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2.5f, Color.green);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 4f, Color.green);
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 2.5f))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 4f))
             {
                 if (hit.transform.CompareTag("car") && !_pathTaken)
                 {
@@ -70,6 +103,8 @@ namespace Game.Scripts.Behaviours
             {
 
                 _isGoing = false;
+                DOTween.Kill(1);
+                
 
             }
 
@@ -96,6 +131,19 @@ namespace Game.Scripts.Behaviours
             yield return new WaitForSeconds(1f);
             _pathTaken = false;
         }
+
+        public void MyBarrierOpened(int id)
+        {
+            if (id == _pathId)
+            {
+
+            _isMyBarrierOpen = true;
+
+            }
+        }
+        
+
+
 
     }
 }

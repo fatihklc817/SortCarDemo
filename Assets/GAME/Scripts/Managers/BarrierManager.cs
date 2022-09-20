@@ -8,7 +8,7 @@ namespace Game.Scripts.Managers
 
     public class BarrierManager : CustomBehaviour
     {
-        [SerializeField] barrierBehaviour[] _barrierBehaviours;
+        public barrierBehaviour[] _barrierBehaviours;
 
         
 
@@ -28,6 +28,7 @@ namespace Game.Scripts.Managers
             if (!_barrierBehaviours[ButtonID].IsBarrierInAction)
             {
             _barrierBehaviours[ButtonID].OpenBarrier();
+                GameManager.CarManager.InstantiateCar(ButtonID);
 
             }
 

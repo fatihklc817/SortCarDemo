@@ -9,13 +9,43 @@ namespace Game.Scripts.Managers
 
     public class CarManager : CustomBehaviour
     {
+        [SerializeField] CarBehaviour _carPrefabLeft;
+        [SerializeField] CarBehaviour _carPrefabRight;
+        [SerializeField] Transform _leftInstantiatePos;
+        [SerializeField] Transform _rightInstantiatePos;
+        private CarBehaviour _currentCar;
 
-        [SerializeField] CarBehaviour _carBehaviour;
+
 
         public override void Initialize(GameManager gameManager)
         {
             base.Initialize(gameManager);
-            _carBehaviour.Initialize(this);
+            var car1 = Instantiate(_carPrefabLeft, _leftInstantiatePos.position, Quaternion.Euler(0f, 180f, 0f), _leftInstantiatePos.parent);
+            var car2 = Instantiate(_carPrefabRight, _rightInstantiatePos.position, Quaternion.Euler(0f, 180f, 0f), _rightInstantiatePos.parent);
+            car1.Initialize(this, 0);
+            car2.Initialize(this, 1);
         }
+
+
+        public void InstantiateCar(int id)
+        {
+            
+            if (id == 0)
+            {
+                 _currentCar = Instantiate(_carPrefabLeft , _leftInstantiatePos.position, Quaternion.Euler(0f,180f,0f), _leftInstantiatePos.parent);
+            }
+            else
+            {
+                 _currentCar = Instantiate(_carPrefabRight, _rightInstantiatePos.position, Quaternion.Euler(0f, 180f, 0f), _rightInstantiatePos.parent);
+            }
+
+            _currentCar.Initialize(this,id);
+ 
+            
+        }
+
+        
+
+
     }
 }
