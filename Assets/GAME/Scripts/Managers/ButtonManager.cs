@@ -33,8 +33,8 @@ namespace Game.Scripts.Managers
                     {
                         Debug.Log("KapiAçilsin");
                         int id = hit.transform.gameObject.GetComponent<ButtonBehaviouur>().ButtonID;
-                        GameManager.BarrierManager.OpenBarrier(id);
                         GameManager.EventManager.OpenBarrier(id);
+                        GameManager.BarrierManager.OpenBarrier(id);
 
 
                         
