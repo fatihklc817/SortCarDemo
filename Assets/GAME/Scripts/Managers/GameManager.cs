@@ -14,6 +14,9 @@ namespace Game.Scripts.Managers
         public BarrierManager BarrierManager;
         public CarManager CarManager;
         public ButtonManager ButtonManager;
+        public PathManager PathManager;
+        public EventManager EventManager;
+        
 
         public void Awake()
         {
@@ -21,6 +24,9 @@ namespace Game.Scripts.Managers
             BarrierManager.Initialize(this);
             CarManager.Initialize(this);
             ButtonManager.Initialize(this);
+            PathManager.Initialize(this);
+            EventManager.Initialize(this);
+            
         }
 
 

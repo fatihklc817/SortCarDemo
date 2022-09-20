@@ -9,12 +9,15 @@ namespace Game.Scripts.Managers
     public class ButtonManager : CustomBehaviour
     {
 
-        [SerializeField] List<ButtonBehaviouur> _buttonBehaviours;
+        public List<ButtonBehaviouur> _buttonBehaviours;
 
         public override void Initialize(GameManager gameManager)
         {
             base.Initialize(gameManager);
-
+            for (int i = 0; i < _buttonBehaviours.Count; i++)
+            {
+                _buttonBehaviours[i].Initialize(this);
+            }
 
         }
 
@@ -29,7 +32,12 @@ namespace Game.Scripts.Managers
                     if (hit.transform.CompareTag("Button"))
                     {
                         Debug.Log("KapiAçilsin");
-                        GameManager.BarrierManager.OpenBarrier(hit.transform.gameObject.GetComponent<ButtonBehaviouur>().ButtonID);
+                        int id = hit.transform.gameObject.GetComponent<ButtonBehaviouur>().ButtonID;
+                        GameManager.BarrierManager.OpenBarrier(id);
+                        GameManager.EventManager.OpenBarrier(id);
+
+
+                        
 
                     }
                 }
